@@ -2,7 +2,7 @@
 services:
   backend:
     container_name: backend
-    build: ./target/restfulSpring.war
+    build: .
     networks:
       - marketplace
     depends_on:
@@ -28,21 +28,9 @@ services:
     networks:
       - marketplace
 
-  frontend:
-    container_name: frontend
-    build: ./frontend/
-    ports:
-      - '4200:4200'
-
 networks:
   marketplace:
     driver: bridge
 
 volumes:
   pgdata:
-
-#  angular-docker:
-#    container_name: frontend
-#    build: ./front
-#    ports:
-#      - '9000:80'
