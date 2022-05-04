@@ -7,11 +7,12 @@ services:
       - marketplace
     depends_on:
       - pgdb
+      - frontend
     volumes:
       - ./target/restfulSpring.war:/usr/local/tomcat/webapps/ROOT.war
     ports:
-      - "8080:8080"
-      - "80:80"
+      - '8080:8080'
+      - '80:80'
 
   pgdb:
     container_name: pgdb
@@ -25,6 +26,15 @@ services:
       POSTGRES_DB: marketplace
     ports:
       - 5432:5432
+    networks:
+      - marketplace
+
+  frontend:
+    container_name: frontend
+    image: grioool/marketplace-frontend:latest
+    restart: always
+    ports:
+      - '9100:80'
     networks:
       - marketplace
 
