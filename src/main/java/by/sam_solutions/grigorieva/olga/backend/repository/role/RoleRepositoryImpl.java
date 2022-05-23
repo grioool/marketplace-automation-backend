@@ -5,7 +5,6 @@ import by.sam_solutions.grigorieva.olga.backend.repository.AbstractRepositoryImp
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
 
 @Repository
 public class RoleRepositoryImpl extends AbstractRepositoryImpl<Role> implements RoleRepository {
@@ -17,7 +16,7 @@ public class RoleRepositoryImpl extends AbstractRepositoryImpl<Role> implements 
                     )
                     .setParameter("roleName", name)
                     .getSingleResult();
-        } catch (NoResultException | NonUniqueResultException ignored) {
+        } catch (NoResultException ignored) {
             return null;
         }
     }
