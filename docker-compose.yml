@@ -12,7 +12,6 @@ services:
       - ./target/restfulSpring.war:/usr/local/tomcat/webapps/ROOT.war
     ports:
       - '8080:8080'
-      - '80:80'
 
   pgdb:
     container_name: pgdb
@@ -20,6 +19,7 @@ services:
     restart: always
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./init-database.sh:/docker-entrypoint-initdb.d/init-database.sh
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1111
