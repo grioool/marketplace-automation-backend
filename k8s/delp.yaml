@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: marketplace-automation
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: marketplace-automation
+  template:
+    metadata:
+      labels:
+        app: marketplace-automation
+        visualize: "true"
+    spec:
+      containers:
+        - name: marketplace-automation-backend-pod
+          image: grioool/marketplace-backend
+          ports:
+            - containerPort: 8080
+
+        - name: marketplace-automation-frontend-pod
+          image: grioool/marketplace-frontend
+          ports:
+            - containerPort: 4200
+
+        - name: postgres-pod
+          image: postgres
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                - configMapRef:
+                  name: config-map
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER
+              valueFrom:
+                - configMapRef:
+                  name: config-map
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                - configMapRef:
+                  name: config-map
+                  key: POSTGRES_PASSWORD
+#          volumeMounts:
+#            - name: postgres-database-storage
+#            mountPath: /var/lib/pgsql/data
+#        volumes:
+#            - name: postgres-database-storage
+#              persistentVolumeClaim:
+#                claimName: postgres-pv-claim
+
+#            - env:
+#                - name: POSTGRES_DB
+#                  valueFrom:
+#                    configMapKeyRef:
+#                      name: postgres-config
+#                      key: POSTGRES_DB
+#                - name: POSTGRES_USER
+#                  valueFrom:
+#                    configMapKeyRef:
+#                      name: postgres-config
+#                      key: POSTGRES_USER
+#                - name: POSTGRES_PASSWORD
+#                  valueFrom:
+#                    configMapKeyRef:
+#                      name: postgres-config
+#                      key: POSTGRES_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    visualize: "true"
+  name: marketplace-automation-service
+spec:
+  selector:
+    app: marketplace-automation
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
